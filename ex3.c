@@ -43,11 +43,10 @@ int main()
             initializeData(arr);
             int carBrandIndx, sumFirst, sumSecond, sumThird, sumFourth;
             printf("Entert a car brand index and a series of 4 integers, each representing the daily sales sum for each car type\n");
-            scanf(" %d %d %d %d %d", carBrandIndx, sumFirst, sumSecond, sumThird, sumFourth);
+            scanf(" %d %d %d %d %d", &carBrandIndx, &sumFirst, &sumSecond, &sumThird, &sumFourth);
             if (carBrandIndx < 0 || carBrandIndx > 4)
             {
                 printf("This brand is not valid\n");
-                printMenu();
                 break;
             }
             insertData(arr, carBrandIndx, 0, sumFirst);
