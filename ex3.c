@@ -32,7 +32,7 @@ int main()
 {
     int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES];
     // int days[NUM_OF_BRANDS] = {0};
-    int latestInsertedDay = -1;
+    int latestInsertedDay = 0;
     int insertedBrandsIndx[5] = {-1, -1, -1, -1, -1};
     int carBrandIndx, sumFirst, sumSecond, sumThird, sumFourth;
     initializeData(cube);
@@ -96,21 +96,22 @@ int main()
             int sumSoldTypesInBrand = 0, maxSoldBrand = 0, sumSoldBrandsInType = 0, maxSoldType = 0;
             printf("What day would you like to analyze?\n");
             scanf("%d", &chosenDay);
-            while (chosenDay < 0 || chosenDay > 364 || chosenDay > latestInsertedDay)
+            while (chosenDay < 1 || chosenDay > 365 || chosenDay > latestInsertedDay)
             {
                 printf("Please enter a valid day.\n");
                 printf("What day would you like to analyze?\n");
                 scanf("%d", &chosenDay);
             }
+            int chosenDayIndx = chosenDay - 1;
             for (int i = 0; i < NUM_OF_BRANDS; i++)
             {
                 for (int j = 0; j < NUM_OF_TYPES; j++)
                 {
-                    totalSalesSum = totalSalesSum + cube[chosenDay][i][j];
-                    sumSoldTypesInBrand = sumSoldTypesInBrand + cube[chosenDay][i][j];
+                    totalSalesSum = totalSalesSum + cube[chosenDayIndx][i][j];
+                    sumSoldTypesInBrand = sumSoldTypesInBrand + cube[chosenDayIndx][i][j];
                     for (int k = 0; k < NUM_OF_BRANDS; k++)
                     {
-                        sumSoldBrandsInType = sumSoldBrandsInType + cube[chosenDay][k][j];
+                        sumSoldBrandsInType = sumSoldBrandsInType + cube[chosenDayIndx][k][j];
                     }
                     if (sumSoldBrandsInType > maxSoldType)
                     {
