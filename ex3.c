@@ -21,6 +21,9 @@ Assignment: ex3
 void printMenu();
 void initializeData(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES]);                                         // 0
 void insertData(int arr[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int carBrandIndx, int type, int sumToInsert); // 1
+int isAllBrandsInsert(int arr[5]);                                                                                // 2
+void printMissingData(int insertedBrandsIndx[5]);
+int isCarBrandIndxValid(int insertedBrandsIndx[5], int carBrandIndx);
 
 char brands[NUM_OF_BRANDS][BRANDS_NAMES] = {"Toyoga", "HyunNight", "Mazduh", "FolksVegan", "Key-Yuh"};
 char types[NUM_OF_TYPES][TYPES_NAMES] = {"SUV", "Sedan", "Coupe", "GT"};
@@ -29,6 +32,8 @@ int main()
 {
     int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES];
     int days[NUM_OF_BRANDS] = {0};
+    int insertedBrandsIndx[5] = {-1, -1, -1, -1, -1};
+    int carBrandIndx, sumFirst, sumSecond, sumThird, sumFourth;
     initializeData(cube);
     int choice;
     printMenu();
@@ -41,7 +46,6 @@ int main()
         {
             int arr[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES];
             initializeData(arr);
-            int carBrandIndx, sumFirst, sumSecond, sumThird, sumFourth;
             printf("Entert a car brand index and a series of 4 integers, each representing the daily sales sum for each car type\n");
             scanf(" %d %d %d %d %d", &carBrandIndx, &sumFirst, &sumSecond, &sumThird, &sumFourth);
             if (carBrandIndx < 0 || carBrandIndx > 4)
@@ -57,20 +61,41 @@ int main()
         }
 
         case ADD_ALL: // 2
-            //...
+        {
+            while (!isAllBrandsInsert(insertedBrandsIndx))
+            {
+                printMissingData(insertedBrandsIndx);
+                printf("Please complete the data\n");
+                scanf(" %d %d %d %d %d", &carBrandIndx, &sumFirst, &sumSecond, &sumThird, &sumFourth);
+                while (!isCarBrandIndxValid(insertedBrandsIndx, carBrandIndx))
+                {
+                    printf("This brand is not valid\n");
+                    printMissingData(insertedBrandsIndx);
+                    scanf(" %d %d %d %d %d", &carBrandIndx, &sumFirst, &sumSecond, &sumThird, &sumFourth);
+                }
+                if (isCarBrandIndxValid(insertedBrandsIndx, carBrandIndx))
+                {
+                    insertData(cube, carBrandIndx, 0, sumFirst);
+                    insertData(cube, carBrandIndx, 1, sumSecond);
+                    insertData(cube, carBrandIndx, 2, sumThird);
+                    insertData(cube, carBrandIndx, 3, sumFourth);
+                    insertedBrandsIndx[carBrandIndx] = carBrandIndx;
+                }
+            }
             break;
-        case STATS: // 3
-            //...
-            break;
-        case PRINT: // 4
-            //...
-            break;
-        case INSIGHTS: // 5
-            //...
-            break;
-        case DELTAS: // 6
-            //...
-            break;
+        }
+        // case STATS: // 3
+        //     //...
+        //     break;
+        // case PRINT: // 4
+        //     //...
+        //     break;
+        // case INSIGHTS: // 5
+        //     //...
+        //     break;
+        // case DELTAS: // 6
+        //     //...
+        //     break;
         default:
             printf("Invalid input\n");
         }
@@ -118,4 +143,45 @@ void insertData(int arr[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int carBrand
     {
         arr[count][carBrandIndx][type] = sumToInsert;
     }
+}
+
+int isAllBrandsInsert(int arr[5])
+{
+    for (int i = 0; i <= 4; i++)
+    {
+        if (arr[i] == -1)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+void printMissingData(int insertedBrandsIndx[5])
+{
+    printf("No data for brands ");
+    for (int i = 0; i <= 4; i++)
+    {
+        if (insertedBrandsIndx[i] == -1)
+        {
+            printf("%s ", brands[i]);
+        }
+    }
+    printf("\n");
+}
+
+int isCarBrandIndxValid(int arr[5], int carBrandIndx)
+{
+    if (carBrandIndx < 0 || carBrandIndx > 4)
+    {
+        return 0;
+    }
+    for (int i = 0; i <= 4; i++)
+    {
+        if (arr[i] == carBrandIndx)
+        {
+            return 0;
+        }
+    }
+    return 1;
 }
