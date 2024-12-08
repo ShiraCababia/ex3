@@ -134,9 +134,27 @@ int main()
             break;
         }
 
-        // case PRINT: // 4
-        //     //...
-        //     break;
+        case PRINT: // 4
+        {
+            printf("*****************************************\n\n");
+            for (int i = 0; i < NUM_OF_BRANDS; i++)
+            {
+                printf("Sales for %s:", brands[i]);
+                for (int j = 0; j < latestInsertedDay; j++)
+                {
+                    int day = j + 1;
+                    printf("\nDay %d- ", day);
+                    for (int k = 0; k < NUM_OF_TYPES; k++)
+                    {
+                        printf("%s: %d ", types[k], cube[j][i][k]);
+                    }
+                }
+                printf("\n");
+            }
+            printf("\n\n*****************************************\n");
+            break;
+        }
+
         // case INSIGHTS: // 5
         //     //...
         //     break;
