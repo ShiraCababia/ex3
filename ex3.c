@@ -31,7 +31,8 @@ char types[NUM_OF_TYPES][TYPES_NAMES] = {"SUV", "Sedan", "Coupe", "GT"};
 int main()
 {
     int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES];
-    int days[NUM_OF_BRANDS] = {0};
+    // int days[NUM_OF_BRANDS] = {0};
+    int latestInsertedDay = -1;
     int insertedBrandsIndx[5] = {-1, -1, -1, -1, -1};
     int carBrandIndx, sumFirst, sumSecond, sumThird, sumFourth;
     initializeData(cube);
@@ -82,11 +83,56 @@ int main()
                     insertedBrandsIndx[carBrandIndx] = carBrandIndx;
                 }
             }
+            latestInsertedDay++;
+            for (int i = 0; i < 5; i++)
+            {
+                insertedBrandsIndx[i] = -1;
+            }
             break;
         }
-        // case STATS: // 3
-        //     //...
-        //     break;
+        case STATS: // 3
+        {
+            int chosenDay, totalSalesSum = 0, bestBrandIndx = -1, bestTypeIndx = -1;
+            int sumSoldTypesInBrand = 0, maxSoldBrand = 0, sumSoldBrandsInType = 0, maxSoldType = 0;
+            printf("What day would you like to analyze?\n");
+            scanf("%d", &chosenDay);
+            while (chosenDay < 0 || chosenDay > 364 || chosenDay > latestInsertedDay)
+            {
+                printf("Please enter a valid day.\n");
+                printf("What day would you like to analyze?\n");
+                scanf("%d", &chosenDay);
+            }
+            for (int i = 0; i < NUM_OF_BRANDS; i++)
+            {
+                for (int j = 0; j < NUM_OF_TYPES; j++)
+                {
+                    totalSalesSum = totalSalesSum + cube[chosenDay][i][j];
+                    sumSoldTypesInBrand = sumSoldTypesInBrand + cube[chosenDay][i][j];
+                    for (int k = 0; k < NUM_OF_BRANDS; k++)
+                    {
+                        sumSoldBrandsInType = sumSoldBrandsInType + cube[chosenDay][k][j];
+                    }
+                    if (sumSoldBrandsInType > maxSoldType)
+                    {
+                        maxSoldType = sumSoldBrandsInType;
+                        bestTypeIndx = j;
+                    }
+                    sumSoldBrandsInType = 0;
+                }
+                if (sumSoldTypesInBrand > maxSoldBrand)
+                {
+                    maxSoldBrand = sumSoldTypesInBrand;
+                    bestBrandIndx = i;
+                }
+                sumSoldTypesInBrand = 0;
+            }
+            printf("In day number %d:\n", chosenDay);
+            printf("The sales total was %d\n", totalSalesSum);
+            printf("The best sold brand with %d sales was %s\n", maxSoldBrand, brands[bestBrandIndx]);
+            printf("The best sold type with %d sales was %s\n", maxSoldType, types[bestTypeIndx]);
+            break;
+        }
+
         // case PRINT: // 4
         //     //...
         //     break;
