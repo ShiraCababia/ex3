@@ -229,9 +229,41 @@ int main()
             break;
         }
 
-        // case DELTAS: // 6
-        //     //...
-        //     break;
+        case DELTAS: // 6
+        {
+            int sumDifferences = 0;
+            float avgD = 0;
+            for (int i = 0; i < NUM_OF_BRANDS; i++)
+            {
+                if (latestInsertedDay == 0)
+                {
+                    avgD = 0;
+                }
+                else if (latestInsertedDay == 1)
+                {
+                    for (int t = 0; t < NUM_OF_TYPES; t++)
+                    {
+                        avgD = avgD + cube[0][i][t];
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < NUM_OF_TYPES; j++)
+                    {
+                        for (int k = 0; k < latestInsertedDay - 1; k++)
+                        {
+                            sumDifferences = sumDifferences + (cube[k + 1][i][j] - cube[k][i][j]);
+                        }
+                    }
+                    avgD = sumDifferences / (latestInsertedDay - 1);
+                }
+                printf("Brand: %s, Average Delta: %f\n", brands[i], avgD);
+                avgD = 0;
+                sumDifferences = 0;
+            }
+            break;
+        }
+
         default:
             printf("Invalid input\n");
         }
