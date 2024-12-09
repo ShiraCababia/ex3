@@ -231,8 +231,7 @@ int main()
 
         case DELTAS: // 6
         {
-            int sumDifferences = 0;
-            float avgD = 0;
+            float sumDifferences = 0, avgD = 0;
             for (int i = 0; i < NUM_OF_BRANDS; i++)
             {
                 if (latestInsertedDay == 0)
@@ -255,7 +254,7 @@ int main()
                             sumDifferences = sumDifferences + (cube[k + 1][i][j] - cube[k][i][j]);
                         }
                     }
-                    avgD = (float)sumDifferences / (latestInsertedDay - 1);
+                    avgD = sumDifferences / (latestInsertedDay - 1);
                 }
                 printf("Brand: %s, Average Delta: %f\n", brands[i], avgD);
                 avgD = 0;
