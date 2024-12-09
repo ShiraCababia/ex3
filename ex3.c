@@ -255,7 +255,7 @@ int main()
                             sumDifferences = sumDifferences + (cube[k + 1][i][j] - cube[k][i][j]);
                         }
                     }
-                    avgD = sumDifferences / (latestInsertedDay - 1);
+                    avgD = (float)sumDifferences / (latestInsertedDay - 1);
                 }
                 printf("Brand: %s, Average Delta: %f\n", brands[i], avgD);
                 avgD = 0;
