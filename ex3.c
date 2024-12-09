@@ -103,22 +103,12 @@ int main()
                 scanf("%d", &chosenDay);
             }
             int chosenDayIndx = chosenDay - 1;
+
             for (int i = 0; i < NUM_OF_BRANDS; i++)
             {
                 for (int j = 0; j < NUM_OF_TYPES; j++)
                 {
-                    totalSalesSum = totalSalesSum + cube[chosenDayIndx][i][j];
                     sumSoldTypesInBrand = sumSoldTypesInBrand + cube[chosenDayIndx][i][j];
-                    for (int k = 0; k < NUM_OF_BRANDS; k++)
-                    {
-                        sumSoldBrandsInType = sumSoldBrandsInType + cube[chosenDayIndx][k][j];
-                    }
-                    if (sumSoldBrandsInType > maxSoldType)
-                    {
-                        maxSoldType = sumSoldBrandsInType;
-                        bestTypeIndx = j;
-                    }
-                    sumSoldBrandsInType = 0;
                 }
                 if (sumSoldTypesInBrand > maxSoldBrand)
                 {
@@ -126,6 +116,28 @@ int main()
                     bestBrandIndx = i;
                 }
                 sumSoldTypesInBrand = 0;
+            }
+
+            for (int i = 0; i < NUM_OF_TYPES; i++)
+            {
+                for (int j = 0; j < NUM_OF_BRANDS; j++)
+                {
+                    sumSoldBrandsInType = sumSoldBrandsInType + cube[chosenDayIndx][j][i];
+                }
+                if (sumSoldBrandsInType > maxSoldType)
+                {
+                    maxSoldType = sumSoldBrandsInType;
+                    bestTypeIndx = i;
+                }
+                sumSoldBrandsInType = 0;
+            }
+
+            for (int i = 0; i < NUM_OF_BRANDS; i++)
+            {
+                for (int j = 0; j < NUM_OF_TYPES; j++)
+                {
+                    totalSalesSum = totalSalesSum + cube[chosenDayIndx][i][j];
+                }
             }
             printf("In day number %d:\n", chosenDay);
             printf("The sales total was %d\n", totalSalesSum);
@@ -155,9 +167,68 @@ int main()
             break;
         }
 
-        // case INSIGHTS: // 5
-        //     //...
-        //     break;
+        case INSIGHTS: // 5
+        {
+            int sumSellingBrand = 0, maxSellingBrand = 0, mostSoldBrandIndx = -1;
+            int sumSellingType = 0, maxSellingType = 0, mostSoldTypeIndx = -1;
+            int sumSellingInDay = 0, maxSellingInDay = 0, mostSoldDayIndx = -1;
+            for (int i = 0; i < NUM_OF_BRANDS; i++)
+            {
+                for (int j = 0; j < NUM_OF_TYPES; j++)
+                {
+                    for (int k = 0; k < latestInsertedDay; k++)
+                    {
+                        sumSellingBrand = sumSellingBrand + cube[k][i][j];
+                    }
+                }
+                if (sumSellingBrand > maxSellingBrand)
+                {
+                    maxSellingBrand = sumSellingBrand;
+                    mostSoldBrandIndx = i;
+                }
+                sumSellingBrand = 0;
+            }
+
+            for (int i = 0; i < NUM_OF_TYPES; i++)
+            {
+                for (int j = 0; j < NUM_OF_BRANDS; j++)
+                {
+                    for (int k = 0; k < latestInsertedDay; k++)
+                    {
+                        sumSellingType = sumSellingType + cube[k][j][i];
+                    }
+                }
+                if (sumSellingType > maxSellingType)
+                {
+                    maxSellingType = sumSellingType;
+                    mostSoldTypeIndx = i;
+                }
+                sumSellingType = 0;
+            }
+
+            for (int i = 0; i < latestInsertedDay; i++)
+            {
+                for (int j = 0; j < NUM_OF_BRANDS; j++)
+                {
+                    for (int k = 0; k < NUM_OF_TYPES; k++)
+                    {
+                        sumSellingInDay = sumSellingInDay + cube[i][j][k];
+                    }
+                }
+                if (sumSellingInDay > maxSellingInDay)
+                {
+                    maxSellingInDay = sumSellingInDay;
+                    mostSoldDayIndx = i;
+                }
+                sumSellingInDay = 0;
+            }
+            int profitableDay = mostSoldDayIndx + 1;
+            printf("The best-selling brand overall is %s: %d$\n", brands[mostSoldBrandIndx], maxSellingBrand);
+            printf("The best-selling type of car is %s: %d$\n", types[mostSoldTypeIndx], maxSellingType);
+            printf("The most profitable day was day number %d: %d$\n", profitableDay, maxSellingInDay);
+            break;
+        }
+
         // case DELTAS: // 6
         //     //...
         //     break;
