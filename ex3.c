@@ -1,6 +1,6 @@
 /******************
 Name: Shira Cababia
-ID:
+ID: 326153590
 Assignment: ex3
 *******************/
 
@@ -21,9 +21,9 @@ Assignment: ex3
 void printMenu();
 void initializeData(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES]);                                         // 0
 void insertData(int arr[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int carBrandIndx, int type, int sumToInsert); // 1
-int isAllBrandsInsert(int arr[5]);                                                                                // 2
-void printMissingData(int insertedBrandsIndx[5]);
-int isCarBrandIndxValid(int insertedBrandsIndx[5], int carBrandIndx);
+int isAllBrandsInsert(int arr[NUM_OF_BRANDS]);                                                                    // 2
+void printMissingData(int insertedBrandsIndx[NUM_OF_BRANDS]);
+int isCarBrandIndxValid(int insertedBrandsIndx[NUM_OF_BRANDS], int carBrandIndx);
 
 char brands[NUM_OF_BRANDS][BRANDS_NAMES] = {"Toyoga", "HyunNight", "Mazduh", "FolksVegan", "Key-Yuh"};
 char types[NUM_OF_TYPES][TYPES_NAMES] = {"SUV", "Sedan", "Coupe", "GT"};
@@ -31,9 +31,8 @@ char types[NUM_OF_TYPES][TYPES_NAMES] = {"SUV", "Sedan", "Coupe", "GT"};
 int main()
 {
     int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES];
-    // int days[NUM_OF_BRANDS] = {0};
-    int latestInsertedDay = 0;
-    int insertedBrandsIndx[5] = {-1, -1, -1, -1, -1};
+    int insertedDaysAmount = 0;                                   // Representing the amount of days the user inserted.
+    int insertedBrandsIndx[NUM_OF_BRANDS] = {-1, -1, -1, -1, -1}; // Array that helps to
     int carBrandIndx, sumFirst, sumSecond, sumThird, sumFourth;
     initializeData(cube);
     int choice;
@@ -49,7 +48,7 @@ int main()
             initializeData(arr);
             printf("Entert a car brand index and a series of 4 integers, each representing the daily sales sum for each car type\n");
             scanf(" %d %d %d %d %d", &carBrandIndx, &sumFirst, &sumSecond, &sumThird, &sumFourth);
-            if (carBrandIndx < 0 || carBrandIndx > 4)
+            if (carBrandIndx < 0 || carBrandIndx >= NUM_OF_BRANDS)
             {
                 printf("This brand is not valid\n");
                 break;
@@ -83,8 +82,10 @@ int main()
                     insertedBrandsIndx[carBrandIndx] = carBrandIndx;
                 }
             }
-            latestInsertedDay++;
-            for (int i = 0; i < 5; i++)
+            // Increase the days amount by 1 since the user inserted data for another day.
+            insertedDaysAmount++;
+            // Initialize the insertedBrandsIndx array for next insert by the user.
+            for (int i = 0; i < NUM_OF_BRANDS; i++)
             {
                 insertedBrandsIndx[i] = -1;
             }
@@ -96,7 +97,7 @@ int main()
             int sumSoldTypesInBrand = 0, maxSoldBrand = 0, sumSoldBrandsInType = 0, maxSoldType = 0;
             printf("What day would you like to analyze?\n");
             scanf("%d", &chosenDay);
-            while (chosenDay < 1 || chosenDay > 365 || chosenDay > latestInsertedDay)
+            while (chosenDay < 1 || chosenDay > DAYS_IN_YEAR || chosenDay > insertedDaysAmount)
             {
                 printf("Please enter a valid day.\n");
                 printf("What day would you like to analyze?\n");
@@ -152,7 +153,7 @@ int main()
             for (int i = 0; i < NUM_OF_BRANDS; i++)
             {
                 printf("Sales for %s:", brands[i]);
-                for (int j = 0; j < latestInsertedDay; j++)
+                for (int j = 0; j < insertedDaysAmount; j++)
                 {
                     int day = j + 1;
                     printf("\nDay %d- ", day);
@@ -176,7 +177,7 @@ int main()
             {
                 for (int j = 0; j < NUM_OF_TYPES; j++)
                 {
-                    for (int k = 0; k < latestInsertedDay; k++)
+                    for (int k = 0; k < insertedDaysAmount; k++)
                     {
                         sumSellingBrand = sumSellingBrand + cube[k][i][j];
                     }
@@ -193,7 +194,7 @@ int main()
             {
                 for (int j = 0; j < NUM_OF_BRANDS; j++)
                 {
-                    for (int k = 0; k < latestInsertedDay; k++)
+                    for (int k = 0; k < insertedDaysAmount; k++)
                     {
                         sumSellingType = sumSellingType + cube[k][j][i];
                     }
@@ -206,7 +207,7 @@ int main()
                 sumSellingType = 0;
             }
 
-            for (int i = 0; i < latestInsertedDay; i++)
+            for (int i = 0; i < insertedDaysAmount; i++)
             {
                 for (int j = 0; j < NUM_OF_BRANDS; j++)
                 {
@@ -234,11 +235,11 @@ int main()
             float sumDifferences = 0, avgD = 0;
             for (int i = 0; i < NUM_OF_BRANDS; i++)
             {
-                if (latestInsertedDay == 0)
+                if (insertedDaysAmount == 0)
                 {
                     avgD = 0;
                 }
-                else if (latestInsertedDay == 1)
+                else if (insertedDaysAmount == 1)
                 {
                     for (int t = 0; t < NUM_OF_TYPES; t++)
                     {
@@ -249,12 +250,12 @@ int main()
                 {
                     for (int j = 0; j < NUM_OF_TYPES; j++)
                     {
-                        for (int k = 0; k < latestInsertedDay - 1; k++)
+                        for (int k = 0; k < insertedDaysAmount - 1; k++)
                         {
                             sumDifferences = sumDifferences + (cube[k + 1][i][j] - cube[k][i][j]);
                         }
                     }
-                    avgD = sumDifferences / (latestInsertedDay - 1);
+                    avgD = sumDifferences / (insertedDaysAmount - 1);
                 }
                 printf("Brand: %s, Average Delta: %f\n", brands[i], avgD);
                 avgD = 0;
@@ -312,9 +313,9 @@ void insertData(int arr[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int carBrand
     }
 }
 
-int isAllBrandsInsert(int arr[5])
+int isAllBrandsInsert(int arr[NUM_OF_BRANDS])
 {
-    for (int i = 0; i <= 4; i++)
+    for (int i = 0; i < NUM_OF_BRANDS; i++)
     {
         if (arr[i] == -1)
         {
@@ -324,10 +325,10 @@ int isAllBrandsInsert(int arr[5])
     return 1;
 }
 
-void printMissingData(int insertedBrandsIndx[5])
+void printMissingData(int insertedBrandsIndx[NUM_OF_BRANDS])
 {
     printf("No data for brands ");
-    for (int i = 0; i <= 4; i++)
+    for (int i = 0; i < NUM_OF_BRANDS; i++)
     {
         if (insertedBrandsIndx[i] == -1)
         {
@@ -337,13 +338,13 @@ void printMissingData(int insertedBrandsIndx[5])
     printf("\n");
 }
 
-int isCarBrandIndxValid(int arr[5], int carBrandIndx)
+int isCarBrandIndxValid(int arr[NUM_OF_BRANDS], int carBrandIndx)
 {
-    if (carBrandIndx < 0 || carBrandIndx > 4)
+    if (carBrandIndx < 0 || carBrandIndx >= NUM_OF_BRANDS)
     {
         return 0;
     }
-    for (int i = 0; i <= 4; i++)
+    for (int i = 0; i < NUM_OF_BRANDS; i++)
     {
         if (arr[i] == carBrandIndx)
         {
