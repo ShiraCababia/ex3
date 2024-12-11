@@ -66,7 +66,7 @@ int main()
         {
             int arr[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES];
             initializeData(arr);
-            printf("Entert a car brand index and a series of 4 integers, each representing the daily sales sum for each car type\n");
+            printf("Enter a car brand index and a series of 4 integers\n");
             scanf(" %d %d %d %d %d", &carBrandIndx, &sumSUV, &sumSedan, &sumCoupe, &sumGT);
             if (carBrandIndx < 0 || carBrandIndx >= NUM_OF_BRANDS)
             {
