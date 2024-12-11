@@ -51,7 +51,7 @@ int main()
     // An array that helps tracking for which brands the user entered data for.
     int insertedBrandsIndx[NUM_OF_BRANDS] = {-1, -1, -1, -1, -1};
     // Variables representing data the user entered for types in a brand.
-    int carBrandIndx, sumFirst, sumSecond, sumThird, sumFourth;
+    int carBrandIndx, sumSUV, sumSedan, sumCoupe, sumGT;
     // Initialize the  data in the cube and print the menu.
     initializeData(cube);
     printMenu();
@@ -67,39 +67,41 @@ int main()
             int arr[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES];
             initializeData(arr);
             printf("Entert a car brand index and a series of 4 integers, each representing the daily sales sum for each car type\n");
-            scanf(" %d %d %d %d %d", &carBrandIndx, &sumFirst, &sumSecond, &sumThird, &sumFourth);
+            scanf(" %d %d %d %d %d", &carBrandIndx, &sumSUV, &sumSedan, &sumCoupe, &sumGT);
             if (carBrandIndx < 0 || carBrandIndx >= NUM_OF_BRANDS)
             {
                 printf("This brand is not valid\n");
                 break;
             }
-            insertData(arr, carBrandIndx, 0, sumFirst);
-            insertData(arr, carBrandIndx, 1, sumSecond);
-            insertData(arr, carBrandIndx, 2, sumThird);
-            insertData(arr, carBrandIndx, 3, sumFourth);
+            insertData(arr, carBrandIndx, 0, sumSUV);
+            insertData(arr, carBrandIndx, 1, sumSedan);
+            insertData(arr, carBrandIndx, 2, sumCoupe);
+            insertData(arr, carBrandIndx, 3, sumGT);
             break;
         }
 
         case ADD_ALL: // 2
         {
-            // As long as the user didn't enter data for all brands.
+            // Continue asking for data until all brands have data entered.
             while (!isAllBrandsInsert(insertedBrandsIndx))
             {
                 printMissingData(insertedBrandsIndx);
                 printf("Please complete the data\n");
-                scanf(" %d %d %d %d %d", &carBrandIndx, &sumFirst, &sumSecond, &sumThird, &sumFourth);
+                scanf(" %d %d %d %d %d", &carBrandIndx, &sumSUV, &sumSedan, &sumCoupe, &sumGT);
                 while (!isCarBrandIndxValid(insertedBrandsIndx, carBrandIndx))
                 {
                     printf("This brand is not valid\n");
                     printMissingData(insertedBrandsIndx);
-                    scanf(" %d %d %d %d %d", &carBrandIndx, &sumFirst, &sumSecond, &sumThird, &sumFourth);
+                    scanf(" %d %d %d %d %d", &carBrandIndx, &sumSUV, &sumSedan, &sumCoupe, &sumGT);
                 }
+                /* Check if the entered brand is valid, if it does - entered the data to the cube and mark
+                the brand as no longer valid for next insert data */
                 if (isCarBrandIndxValid(insertedBrandsIndx, carBrandIndx))
                 {
-                    insertData(cube, carBrandIndx, 0, sumFirst);
-                    insertData(cube, carBrandIndx, 1, sumSecond);
-                    insertData(cube, carBrandIndx, 2, sumThird);
-                    insertData(cube, carBrandIndx, 3, sumFourth);
+                    insertData(cube, carBrandIndx, 0, sumSUV);
+                    insertData(cube, carBrandIndx, 1, sumSedan);
+                    insertData(cube, carBrandIndx, 2, sumCoupe);
+                    insertData(cube, carBrandIndx, 3, sumGT);
                     insertedBrandsIndx[carBrandIndx] = carBrandIndx;
                 }
             }
@@ -115,6 +117,7 @@ int main()
 
         case STATS: // 3
         {
+            // Get a day from the user and make sure it's acceptable.
             int chosenDay;
             printf("What day would you like to analyze?\n");
             scanf("%d", &chosenDay);
@@ -124,6 +127,7 @@ int main()
                 printf("What day would you like to analyze?\n");
                 scanf("%d", &chosenDay);
             }
+            // Print all requested data in the chosen day.
             printf("In day number %d:\n", chosenDay);
             printTotalSalesInDay(cube, chosenDay);
             printBestBrandInDay(cube, chosenDay);
@@ -182,6 +186,7 @@ void printMenu()
            "7.exit\n");
 }
 
+// Initialize the data in the cube array before future inserts of data.
 void initializeData(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES])
 {
     for (int i = 0; i < DAYS_IN_YEAR; i++)
@@ -196,6 +201,7 @@ void initializeData(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES])
     }
 }
 
+// Inserts data in the first available cell in the cube (according to the given brand and type).
 void insertData(int arr[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int carBrandIndx, int type, int sumToInsert)
 {
     int count = 0;
@@ -209,8 +215,7 @@ void insertData(int arr[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int carBrand
     }
 }
 
-/* The function gets an array with 5 cells -as the number of the brands- and checks wether the user entered data
-for all the brands. Returns 0 if there's place for more brands to insert, otherwise returns 1.*/
+// Checks if all brands entered.
 int isAllBrandsInsert(int arr[NUM_OF_BRANDS])
 {
     for (int i = 0; i < NUM_OF_BRANDS; i++)
@@ -223,6 +228,7 @@ int isAllBrandsInsert(int arr[NUM_OF_BRANDS])
     return 1;
 }
 
+// Print the names of brands the user didn't entered data for.
 void printMissingData(int insertedBrandsIndx[NUM_OF_BRANDS])
 {
     printf("No data for brands ");
@@ -236,6 +242,7 @@ void printMissingData(int insertedBrandsIndx[NUM_OF_BRANDS])
     printf("\n");
 }
 
+// Checks if the brand the user entered is valid - if it's between 0-4 and if the user didn't already enter data for it.
 int isCarBrandIndxValid(int arr[NUM_OF_BRANDS], int carBrandIndx)
 {
     if (carBrandIndx < 0 || carBrandIndx >= NUM_OF_BRANDS)
@@ -252,6 +259,7 @@ int isCarBrandIndxValid(int arr[NUM_OF_BRANDS], int carBrandIndx)
     return 1;
 }
 
+// Calculate what's the brand with the largest amount of sales in the given day and print a proper message.
 void printBestBrandInDay(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int chosenDay)
 {
     int sumSoldTypesInBrand = 0, maxSoldBrand = 0, bestBrandIndx = -1;
@@ -260,8 +268,10 @@ void printBestBrandInDay(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], in
     {
         for (int j = 0; j < NUM_OF_TYPES; j++)
         {
+            // Sum the data in all the types in the specific brand and given day.
             sumSoldTypesInBrand = sumSoldTypesInBrand + cube[chosenDayIndx][i][j];
         }
+        // Update the most sold brand, if justified.
         if (sumSoldTypesInBrand > maxSoldBrand)
         {
             maxSoldBrand = sumSoldTypesInBrand;
@@ -272,6 +282,7 @@ void printBestBrandInDay(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], in
     printf("The best sold brand with %d sales was %s\n", maxSoldBrand, brands[bestBrandIndx]);
 }
 
+// Calculate what's the type with the largest amount of sales in the given day and print a proper message.
 void printBestTypeInDay(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int chosenDay)
 {
     int sumSoldBrandsInType = 0, maxSoldType = 0, bestTypeIndx = -1;
@@ -280,8 +291,10 @@ void printBestTypeInDay(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int
     {
         for (int j = 0; j < NUM_OF_BRANDS; j++)
         {
+            // Sum the data in all the brands in the specific type and given day.
             sumSoldBrandsInType = sumSoldBrandsInType + cube[chosenDayIndx][j][i];
         }
+        // Update the most sold type, if justified.
         if (sumSoldBrandsInType > maxSoldType)
         {
             maxSoldType = sumSoldBrandsInType;
@@ -292,6 +305,7 @@ void printBestTypeInDay(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int
     printf("The best sold type with %d sales was %s\n", maxSoldType, types[bestTypeIndx]);
 }
 
+// Calculate the sum of sales in the given day and print a proper message.
 void printTotalSalesInDay(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int chosenDay)
 {
     int totalSalesSum = 0;
@@ -306,9 +320,11 @@ void printTotalSalesInDay(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], i
     printf("The sales total was %d\n", totalSalesSum);
 }
 
+// Calculate the amount of sales for each type of the given brand and print a proper message.
 void printAllSalesforBrand(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int brandIndx, int insertedDaysAmount)
 {
     printf("Sales for %s:", brands[brandIndx]);
+    // Going through the days with data only.
     for (int j = 0; j < insertedDaysAmount; j++)
     {
         int day = j + 1;
@@ -321,6 +337,7 @@ void printAllSalesforBrand(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], 
     printf("\n");
 }
 
+// Calculate what's the brand with the largest amount of sales in all days and print a proper message.
 void printBestBrandOverall(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int insertedDaysAmount)
 {
     int sumSellingBrand = 0, maxSellingBrand = 0, mostSoldBrandIndx = -1;
@@ -333,6 +350,7 @@ void printBestBrandOverall(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], 
                 sumSellingBrand = sumSellingBrand + cube[k][i][j];
             }
         }
+        // Update the most sold brand, if justified.
         if (sumSellingBrand > maxSellingBrand)
         {
             maxSellingBrand = sumSellingBrand;
@@ -343,6 +361,7 @@ void printBestBrandOverall(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], 
     printf("The best-selling brand overall is %s: %d$\n", brands[mostSoldBrandIndx], maxSellingBrand);
 }
 
+// Calculate what's the type with the largest amount of sales in all days and print a proper message.
 void printBestTypeOverall(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int insertedDaysAmount)
 {
     int sumSellingType = 0, maxSellingType = 0, mostSoldTypeIndx = -1;
@@ -355,6 +374,7 @@ void printBestTypeOverall(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], i
                 sumSellingType = sumSellingType + cube[k][j][i];
             }
         }
+        // Update the most sold type, if justified.
         if (sumSellingType > maxSellingType)
         {
             maxSellingType = sumSellingType;
@@ -365,6 +385,7 @@ void printBestTypeOverall(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], i
     printf("The best-selling type of car is %s: %d$\n", types[mostSoldTypeIndx], maxSellingType);
 }
 
+// Calculate what's the day with the largest amount of sales (of all brands and types) and print a proper message.
 void printMostProfitableDay(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int insertedDaysAmount)
 {
     int sumSellingInDay = 0, maxSellingInDay = 0, mostSoldDayIndx = -1;
@@ -377,6 +398,7 @@ void printMostProfitableDay(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES],
                 sumSellingInDay = sumSellingInDay + cube[i][j][k];
             }
         }
+        // Update the day with the most sales, if justified.
         if (sumSellingInDay > maxSellingInDay)
         {
             maxSellingInDay = sumSellingInDay;
@@ -388,9 +410,11 @@ void printMostProfitableDay(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES],
     printf("The most profitable day was day number %d: %d$\n", profitableDay, maxSellingInDay);
 }
 
+// 
 float avgDeltaForBrand(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int brandIndx, int insertedDaysAmount)
 {
     float avgD = 0, sumDifferences = 0;
+    // If the user entered data for 1 day, there are no differences so we'll just sum all the sales and print it.
     if (insertedDaysAmount == 1)
     {
         for (int t = 0; t < NUM_OF_TYPES; t++)
@@ -398,6 +422,7 @@ float avgDeltaForBrand(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int 
             avgD = avgD + cube[0][brandIndx][t];
         }
     }
+    // If the user entered data for 2+ days, the func calculates the requested average delta.
     else if (insertedDaysAmount > 1)
     {
         for (int j = 0; j < NUM_OF_TYPES; j++)
@@ -409,6 +434,6 @@ float avgDeltaForBrand(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int 
         }
         avgD = sumDifferences / (insertedDaysAmount - 1);
     }
-    // If the user didn't enter data at all, the func will return 0 as the first value of "avgD".
+    // If the user didn't enter data at all (insertedDaysAmount=0), the func will return 0 as the first value of "avgD".
     return avgD;
 }
