@@ -115,8 +115,7 @@ int main()
 
         case STATS: // 3
         {
-            int chosenDay, totalSalesSum = 0, bestBrandIndx = -1, bestTypeIndx = -1;
-            int sumSoldTypesInBrand = 0, maxSoldBrand = 0, sumSoldBrandsInType = 0, maxSoldType = 0;
+            int chosenDay;
             printf("What day would you like to analyze?\n");
             scanf("%d", &chosenDay);
             while (chosenDay < 1 || chosenDay > DAYS_IN_YEAR || chosenDay > insertedDaysAmount)
