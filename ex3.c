@@ -82,7 +82,7 @@ int main()
 
         case ADD_ALL: // 2
         {
-            // Continue asking for data until all brands have data entered.
+            // Continue asking for data until all brands have data entered. 
             while (!isAllBrandsInsert(insertedBrandsIndx))
             {
                 printMissingData(insertedBrandsIndx);
